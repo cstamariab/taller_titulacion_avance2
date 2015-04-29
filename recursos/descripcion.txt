@@ -1,0 +1,58 @@
+# Descripcion de las columnas
+
+#  0 nro_ticket,	: nro de tickets
+#  1 fecha_creacion, 	: fecha de creacion en timestamp
+#  2 operador, 		: login operador que crea el tickets
+#  3 cliente, 		: cliente a quien pertenece el nodo
+#  4 nombre_operador, 	: nombre del operador
+#  5 from_mail_operador,: correo del operador
+#  6 mail_destino, 	: correos destinos
+#  7 tipo_notificacion, : tipo de notificacion
+#  8 titulo_subject, 	: titulo del correo
+#  9 precheck, 		: valor precheck
+# 10 estado, 		: estado del tickets (false abierto / true cerrado)
+# 11 server, 		: server dueño de la alerta
+# 12 fecha_close, 	: fecha cierre en timestamp
+# 13 operador_close, 	: operador que cierra el tickets
+# 14 comentario_close, 	: comentarios de cierre
+# 15 template, 		: template que se usa
+# 16 llave_event, 	: llave del evento (tk_server::dtk_fecha_desde_evento::dtk_nodo::dtk_desc_alerta)
+# 17 maquina, 		: maquina dueno del evento
+# 18 fecha_desde_evento,: fecha desde evento en timestamp
+# 19 nodo, 		: nombre nodo
+# 20 desc_alerta, 	: descripcion alerta
+# 21 fecha_ultima_actualizacion, : ultima actualizacion del evento
+# 22 valor_alerta, 	: valor alerta (peso de disco, nodo down)
+# 23 tipo_alerta, 	: tipo alerta (warning, fatal)
+# 24 num_escalamiento, 	: numero escalamiento (-1 a 10)
+# 25 estado_gestion, 	: estado gestion (true o false)
+# 26 estado_precheck, 	: estado precheck
+# 27 estado, 		: estado de la alerta 
+# 28 alerta_desaparece, : si aun existe la alerta (false no existe)
+# 29 grupo_nodo, 	: nombre del grupo del nodo
+# 30 server, 		: nombre maquina donde se gestiona
+# 31 fecha_asociar_ticket, : fecha que se asigno el evento al tickets
+# 32 marca_origen_event,: desde donde viene el evento (actual o historico)
+# 33 devicetype 	: tipo dispositivo
+
+
+
+Funciones MySQL
+
+inet_ntoa(numero intero) : convierte nro entero a ip
+inet_aton(ip)            : convierte ip a numero entero
+
+xx_ip	    int unsigned
+
+create table regiones
+(rg_id	    int unsigned AUTO_INCREMENT,
+ rg_numero  int(2),
+ rg_nombre  varchar(50),
+ rg_pafp    decimal(5,2),
+ rg_fecha   datetime,
+ rg_anexo   text,
+ rg_fecha_creacion timestamp null,
+ primary key(rg_id));
+
+mysql> alter table seguimiento change seg_fecha_creacion seg_fecha_creacion timestamp null;
+mysql> alter table tickets add tk_ticket_remoto varchar(15) null;
