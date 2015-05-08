@@ -16,10 +16,11 @@ and open the template in the editor.
                    <h3>Taller de Titulacion.</h3>
                </div>
                <div class="jumbotron-fluid">
-                            <?php
+                             <?php
                             include ('controlador/mantenedor.php');
                             $mantenedor = new mantenedor();
                             $mantenedor->insertar_Archivo();
+                            
                             ?>
                </div>
            </div> 
