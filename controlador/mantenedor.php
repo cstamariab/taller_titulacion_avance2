@@ -6,7 +6,7 @@ class mantenedor {
     private $user = 'root';
     private $pass = '';
 
-    private function crearTabla() {
+    private function crearTablaResumen() {
 
         $conexion = mysqli_connect($this->host, $this->user, $this->pass);
         // Creamos la base de datos.
@@ -74,77 +74,36 @@ class mantenedor {
     }
 
     public function insertar_Archivo() {
-        $this->crearTabla();
-        
+        $this->crearTablaResumen();
+
         error_reporting(0);
-        $errores =0;
-        $exitosos=0;
-        $limpiar = array('<br>','\n','\t');
+        $errores = 0;
+        $exitosos = 0;
+        $limpiar = array("\n", "\n<br>", "<br>", "\r\n");
         $conexion = mysqli_connect($this->host, $this->user, $this->pass);
         //incrementa la memoria 
         ini_set('memory_limit', '2048M');
         //cambia el tiempo maximo de ejecucion de un script
         set_time_limit(300);
         $lineas = file('./recursos/registro.txt');
-        
+
         //Ignora primera linea del archivo
-        //array_shift($lineas);
+        array_shift($lineas);
         //array_pop($lineas);
-        
-//        echo'<table class = "table table-bordered table-striped table-hover">
-//         <thead>
-//        <tr>
-//            <th class="active">nro_ticket</th>
-//            <th>fecha_creacion</th>
-//            <th>operador</th>
-//            <th>cliente</th>
-//            <th>nombre_operador</th>
-//            <th>from_mail_operador</th>
-//            <th>mail_destino</th>
-//            <th>tipo_notificacion</th>
-//            <th>titulo_subjet</th>
-//            <th>precheck</th>
-//            <th>estado_ticket</th>
-//            <th>server_alert</th>
-//            <th>fecha_close</th>
-//            <th>operador_close</th>
-//            <th>comentario_close</th>
-//            <th>template</th>
-//            <th>llave_event</th>
-//            <th>maquina</td>
-//            <th>fecha_desde_evento</th>
-//            <th>nodo</th>
-//            <th>desc_alert</th>
-//            <th>fecha_ultima_Actualizacion</th>
-//            <th>valor_alerta</th>
-//            <th>tipo_alerta</th>
-//            <th>num_escalamiento</th>
-//            <th>estado_gestion</th>
-//            <th>estado_precheck</th>
-//            <th>estado_alert</th>
-//            <th>alerta_desaparece</th>
-//            <th>grupo_nodo</th>
-//            <th>server</th>
-//            <th>fecha_asociar_ticket</th>
-//            <th>marca_origen_event</th>
-//            <th>devicetype</th>
-//        </tr>
-//        </thead>';
-        
+
         foreach ($lineas as $linea_num => $linea) {
-            
-            
+
             $linea = str_replace($limpiar, "", $linea);
-            echo "<p>".$linea."</p>";
-            
+
+
             $datos = explode("\t", $linea);
-            
+
             $nro_ticket = $datos[0]; // ok
-           
+
             $fecha_creacion = $datos[1]; // ok
-            $fecha_creacion = date('Y-m-d H:i:s', $fecha_creacion);
+            $fecha_creacion = date('Y-m-d h:i:s', $fecha_creacion);
             $operador = $datos[2]; // ok
-          
+
 
             $cliente = $datos[3]; // ok
             $nombre_operador = $datos[4]; // ok
@@ -177,43 +136,38 @@ class mantenedor {
             $server_alert = $datos[11]; // ok
             $fecha_close = $datos[12]; // ok
 
-            if ($fecha_close == "" || $fecha_close == null) {
+            if ($fecha_close == "") {
                 $fecha_close = "#Fecha No Ingresada";
             } else {
-                $fecha_close = date('Y-m-d H:i:s', $fecha_close);
+                $fecha_close = date('Y-m-d h:i:s', $fecha_close);
             }
             $operador_close = $datos[13]; // ok
             if ($operador_close == "") {
                 $operador_close = "#Nombre no Ingresado";
             }
-            $comentario_close = trim($datos[14]); // ok
+            $comentario_close = $datos[14]; // ok
             if ($comentario_close == "") {
-                $comentario_close = trim("#Sin Comentarios");
+                $comentario_close = "#Sin Comentarios";
             }
-            $template = trim($datos[15]); // ok
+            $template = $datos[15]; // ok
             $llave_event = $datos[16]; // ok
             $maquina = $datos[17]; // ok
             $fecha_desde_evento = $datos[18]; //ok
-            
-            if($fecha_desde_evento == "" || $fecha_desde_evento == null)
-            {
-                $fecha_desde_evento = null;
-                }
-                else
-                {
-                    $fecha_desde_evento = date('Y-m-d H:i:s', $fecha_desde_evento);
-                }
-            
+
+            if ($fecha_desde_evento == "") {
+                $fecha_desde_evento = "#fecha no ingresada";
+            } else {
+                $fecha_desde_evento = date('Y-m-d h:i:s', $fecha_desde_evento);
+            }
+
             $nodo = $datos[19]; // ok
             $desc_alerta = $datos[20]; // ok
             $fecha_ultima_actualizacion = $datos[21]; //ok
-            if($fecha_ultima_actualizacion == "" || $fecha_ultima_actualizacion == null)
-                {
-                 $fecha_ultima_actualizacion = "#fecha no ingresada";
-                 
-                }else{
-                    $fecha_ultima_actualizacion = date('Y-m-d H:i:s', $fecha_ultima_actualizacion);
-                }
+            if ($fecha_ultima_actualizacion == "") {
+                $fecha_ultima_actualizacion = "#fecha no ingresada";
+            } else {
+                $fecha_ultima_actualizacion = date('Y-m-d h:i:s', $fecha_ultima_actualizacion);
+            }
             $valor_alerta = $datos[22]; //ok
             $tipo_alerta = $datos[23]; // ok
             $num_escalamiento = $datos[24]; //ok
@@ -228,7 +182,7 @@ class mantenedor {
             $devicetype = $datos[33]; //ok
 
             mysqli_select_db($conexion, 'taller_titulacion');
-            
+
             $inserta = "INSERT INTO resumen_total (nro_ticket,fecha_creacion,operador,cliente,nombre_operador,from_mail_operador,mail_destino,tipo_notificacion,titulo_subject,precheck"
                     . ",estado_ticket,server_alert,fecha_close,operador_close,comentario_close,template,llave_event,maquina,fecha_desde_evento,nodo,desc_alerta"
                     . ",fecha_ultima_actualizacion,valor_alerta,tipo_alerta,num_escalamiento,estado_gestion,estado_precheck,estado_alert,alerta_desaparece"
@@ -246,81 +200,98 @@ class mantenedor {
                 echo "<p>OCURRIO UN ERROR AL INSERTAR LOS DATOS !!</p> ";
                 $errores++;
             } else {
-//                echo"<p> Datos ingresados Correctamente.</p>";
+                echo"<p> Datos ingresados Correctamente.</p>";
                 $exitosos++;
-//                echo'
-//       
-//        <tbody>
-//        <tr>
-//            <td>' . $nro_ticket . '</td>
-//            <td>' . $fecha_creacion . '</td>
-//            <td>'.$operador.'</td>
-//            <td>'.$cliente.'</td>
-//            <td>'.$nombre_operador.'</td>
-//            <td>'.$from_mail_operador.'</td>
-//            <td>'.$mail_destino.'</td>
-//            <td>'.$tipo_notificacion.'</td>
-//            <td>'.$titulo_subject.'</td>
-//            <td>'.$precheck.'</td>
-//            <td>'.$estado_ticket.'</td>
-//            <td>'.$server_alert.'</td>
-//            <td>'.$fecha_close.'</td>
-//            <td>'.$operador_close.'</td>
-//            <td>'.$comentario_close.'</td>
-//            <td>'.$template.'</td>
-//            <td>'.$llave_event.'</td>
-//            <td>'.$maquina.'</td>
-//            <td>'.$fecha_desde_evento.'</td>
-//            <td>'.$nodo.'</td>
-//            <td>'.$desc_alerta.'</td>
-//            <td>'.$fecha_ultima_actualizacion.'</td>
-//            <td>'.$valor_alerta.'</td>
-//            <td>'.$tipo_alerta.'</td>
-//            <td>'.$num_escalamiento.'</td>
-//            <td>'.$estado_gestion.'</td>
-//            <td>'.$estado_precheck.'</td>
-//            <td>'.$estado_alert.'</td>
-//            <td>'.$alerta_desaparece.'</td>
-//            <td>'.$grupo_nodo.'</td>
-//            <td>'.$server.'</td>
-//            <td>'.$fecha_asociar_ticket.'</td>
-//            <td>'.$marca_origen_event.'</td>
-//            <td>'.$devicetype.'</td> 
-//        </tr>
-//        </tbody> ';
             }
         }
         echo "<h1>Registros Ingresados Exitosamente :$exitosos  </h1> ";
         echo "<p>Registros No Ingresados : $errores</p> ";
-        
-//         echo'</table>';
+        $this->TablaGrupo();
+        $this->tablaCliente();
     }
 
-    public function crearTablas() {
-        
-    }
     
+    public function TablaGrupo() {
 
-    public function insertaArchivo2() {
-        $this->crearTabla();
-        $archivo = fopen( "./recursos/registro.txt", "rb" );
         $conexion = mysqli_connect($this->host, $this->user, $this->pass);
-       
-        while( feof($archivo) == false )
-     {
-         $datos = fgetcsv( $archivo, 500, "\n");
+        mysqli_select_db($conexion, 'taller_titulacion');
+         //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        $grupo = "create table grupo as (select cliente,operador from resumen_total)";
+        // agrego el campo id_grupo a la tabla
+        $campo = "ALTER TABLE grupo ADD id_grupo int ;";
+        // borro los registros de la tabla para poder agregar la llave primaria al campo id_grupo
+        $borrar = "DELETE FROM `grupo` WHERE 1 ";
+        //agrego la llave primaria
+        $llave = "alter table grupo add primary key (id_grupo);";
+        //modifico el campo id_grupo para que sea autoincrementable
+        $index = "alter table grupo modify id_grupo int unsigned auto_increment;";
+        //vuelvo a insertar los campos ..
+        $insertar = "INSERT INTO grupo(cliente, operador)SELECT cliente, operador FROM resumen_total ";
+        // ***
+        // EJECUCION DE QUERYS
+        $grupo1 = mysqli_query($conexion, $grupo);
+        $campo1 = mysqli_query($conexion, $campo);
+        $borrar1 = mysqli_query($conexion,$borrar);
+        $llave1 = mysqli_query($conexion, $llave);
+        $index1 =  mysqli_query($conexion, $index);
+        $insertar1 = mysqli_query($conexion, $insertar);
+        //****
+        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1 ) {
+            echo"tabla creada con exito";
+        } else {
+            echo"Ocurrio un problema";
+        }
+    }
+    public function tablaCliente ()
+            {
+        $conexion = mysqli_connect($this->host, $this->user, $this->pass);
+        mysqli_select_db($conexion, 'taller_titulacion');
+         //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        $grupo = "create table clientes as (select cliente from resumen_total)";
+        // agrego el campo id_grupo a la tabla
+        $campo = "ALTER TABLE clientes ADD id_cliente int ;";
+        // borro los registros de la tabla para poder agregar la llave primaria al campo id_grupo
+        $borrar = "DELETE FROM `clientes` WHERE 1 ";
+        //agrego la llave primaria
+        $llave = "alter table clientes add primary key (id_cliente);";
+        //modifico el campo id_grupo para que sea autoincrementable
+        $index = "alter table clientes modify id_cliente int unsigned auto_increment;";
+        //vuelvo a insertar los campos ..
+        $insertar = "INSERT INTO clientes(cliente)SELECT cliente FROM resumen_total ";
+        // ***
+        // EJECUCION DE QUERYS
+        $grupo1 = mysqli_query($conexion, $grupo);
+        $campo1 = mysqli_query($conexion, $campo);
+        $borrar1 = mysqli_query($conexion,$borrar);
+        $llave1 = mysqli_query($conexion, $llave);
+        $index1 =  mysqli_query($conexion, $index);
+        $insertar1 = mysqli_query($conexion, $insertar);
+        //****
+        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1 ) {
+            echo"tabla creada con exito";
+        } else {
+            echo"Ocurrio un problema";
+        }
+            }
 
-           echo $nro_ticket = $datos[0]; // ok
-           echo $nro_ticket = str_replace("<br>", "", $nro_ticket);
-           if($nro_ticket == "" || $nro_ticket == null)
-               {
-               $nro_ticket = "Sin numero";
-               }
+    
+    public function insertaArchivo2() {
+        // ESTE NO SE USA !
+        $this->crearTabla();
+        $archivo = fopen("./recursos/registro.txt", "rb");
+        $conexion = mysqli_connect($this->host, $this->user, $this->pass);
+
+        while (feof($archivo) == false) {
+            $datos = fgetcsv($archivo, 500, "\n");
+
+            echo $nro_ticket = $datos[0]; // ok
+            echo $nro_ticket = str_replace("<br>", "", $nro_ticket);
+
             echo$fecha_creacion = $datos[1]; // ok
             echo$fecha_creacion = date('Y-m-d H:i:s', $fecha_creacion);
             echo$operador = $datos[2]; // ok
 
-           echo $cliente = $datos[3]; // ok
+            echo $cliente = $datos[3]; // ok
             echo $nombre_operador = $datos[4]; // ok
 
             if ($nombre_operador == "") {
@@ -384,9 +355,9 @@ class mantenedor {
             $server = $datos[30]; // ok
             $fecha_asociar_ticket = $datos[31]; //ok
             $marca_origen_event = $datos[32]; // ok
-            $devicetype = $datos[33]; 
-        echo "--------------------------<br />";
-          mysqli_select_db($conexion, 'taller_titulacion');
+            $devicetype = $datos[33];
+            echo "--------------------------<br />";
+            mysqli_select_db($conexion, 'taller_titulacion');
             $inserta = "INSERT INTO resumen_total (nro_ticket,fecha_creacion,operador,cliente,nombre_operador,from_mail_operador,mail_destino,tipo_notificacion,titulo_subject,precheck"
                     . ",estado_ticket,server_alert,fecha_close,operador_close,comentario_close,template,llave_event,maquina,fecha_desde_evento,nodo,desc_alerta"
                     . ",fecha_ultima_actualizacion,valor_alerta,tipo_alerta,num_escalamiento,estado_gestion,estado_precheck,estado_alert,alerta_desaparece"
@@ -399,10 +370,8 @@ class mantenedor {
                     . ",'" . $alerta_desaparece . "','" . $grupo_nodo . "','" . $server . "','" . $fecha_asociar_ticket . "','" . $marca_origen_event . "','" . $devicetype . "')";
 
             $insertado = mysqli_query($conexion, $inserta);
-
-    }
-    fclose( $archivo );
-        
+        }
+        fclose($archivo);
     }
 
 }

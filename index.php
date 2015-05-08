@@ -15,11 +15,12 @@ and open the template in the editor.
                <div class="page-header">
                    <h3>Taller de Titulacion.</h3>
                </div>
-               <div class="jumbotron-fluid">
+               <div class="jumbotron">
                             <?php
                             include ('controlador/mantenedor.php');
                             $mantenedor = new mantenedor();
                             $mantenedor->insertar_Archivo();
+                            $mantenedor->crearTablas();
                             ?>
                </div>
            </div> 
