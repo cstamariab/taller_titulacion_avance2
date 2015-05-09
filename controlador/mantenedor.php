@@ -206,14 +206,16 @@ class mantenedor {
         }
         echo "<h1>Registros Ingresados Exitosamente :$exitosos  </h1> ";
         echo "<p>Registros No Ingresados : $errores</p> ";
-        $this->TablaGrupo();
+        
+        $this->tablaCliente();
+        $this->tablaTicket();
     }
 
     public function TablaGrupo() {
 
         $conexion = mysqli_connect($this->host, $this->user, $this->pass);
         mysqli_select_db($conexion, 'taller_titulacion');
-         //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
         $grupo = "create table grupo as (select cliente,operador from resumen_total)";
         // agrego el campo id_grupo a la tabla
         $campo = "ALTER TABLE grupo ADD id_grupo int ;";
@@ -224,22 +226,118 @@ class mantenedor {
         //modifico el campo id_grupo para que sea autoincrementable
         $index = "alter table grupo modify id_grupo int unsigned auto_increment;";
         //vuelvo a insertar los campos ..
-        $insertar = "INSERT INTO grupo (cliente, operador) SELECT cliente, operador FROM resumen_total ";
+        $insertar = "INSERT INTO grupo(cliente, operador)SELECT cliente, operador FROM resumen_total ";
         // ***
         // EJECUCION DE QUERYS
         $grupo1 = mysqli_query($conexion, $grupo);
         $campo1 = mysqli_query($conexion, $campo);
-        $borrar1 = mysqli_query($conexion,$borrar);
+        $borrar1 = mysqli_query($conexion, $borrar);
         $llave1 = mysqli_query($conexion, $llave);
-        $index1 =  mysqli_query($conexion, $index);
+        $index1 = mysqli_query($conexion, $index);
         $insertar1 = mysqli_query($conexion, $insertar);
         //****
-        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1 ) {
+        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1) {
             echo"tabla creada con exito";
         } else {
             echo"Ocurrio un problema";
         }
     }
+
+    public function tablaCliente() {
+        
+        $conexion = mysqli_connect($this->host, $this->user, $this->pass);
+        mysqli_select_db($conexion, 'taller_titulacion');
+        //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        $grupo = "create table clientes as (select cliente from resumen_total)";
+        // agrego el campo id_grupo a la tabla
+        $campo = "ALTER TABLE clientes ADD id_cliente int ;";
+        // borro los registros de la tabla para poder agregar la llave primaria al campo id_grupo
+        $borrar = "DELETE FROM `clientes` WHERE 1 ";
+        //agrego la llave primaria
+        $llave = "alter table clientes add primary key (id_cliente,cliente);";
+        //modifico el campo id_grupo para que sea autoincrementable
+        $index = "alter table clientes modify id_cliente int unsigned auto_increment;";
+        //vuelvo a insertar los campos ..
+        $insertar = "INSERT INTO clientes(cliente)SELECT cliente FROM resumen_total ";
+        
+        $llave = "alter table clientes drop primary key(id_cliente)";
+        // ***
+        // EJECUCION DE QUERYS
+        $grupo1 = mysqli_query($conexion, $grupo);
+        $campo1 = mysqli_query($conexion, $campo);
+        $borrar1 = mysqli_query($conexion, $borrar);
+        $llave1 = mysqli_query($conexion, $llave);
+        $index1 = mysqli_query($conexion, $index);
+        $insertar1 = mysqli_query($conexion, $insertar);
+        //****
+        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1) {
+            echo"tabla creada con exito";
+        } else {
+            echo"Ocurrio un problema";
+        }
+    }
+
+    public function tablaTicket() {
+        $conexion = mysqli_connect($this->host, $this->user, $this->pass);
+        mysqli_select_db($conexion, 'taller_titulacion');
+        //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        $grupo = "create table ticket as (select rt.nro_ticket,cli.cliente from resumen_total as rt,clientes cli)";
+        
+        $forania = "alter table ticket  add FOREIGN KEY (cliente) REFERENCES clientes (cliente) ";
+        //modifico el campo id_grupo para que sea autoincrementable
+        $llave ="alter table ticket add primary key (cliente, nro_ticket)";
+        //vuelvo a insertar los campos ..
+        $insertar = "INSERT INTO ticket(nro_ticket,cliente)SELECT rt.nro_ticket,cli.cliente  FROM  resumen_total as rt,clientes cli ";
+        // ***
+        // EJECUCION DE QUERYS
+        $grupo1 = mysqli_query($conexion, $grupo);
+        
+        
+        
+        $forania1 = mysqli_query($conexion, $forania);
+        
+        
+        $insertar1 = mysqli_query($conexion, $insertar);
+        
+        //****
+        if ($grupo1  || $insertar1) {
+            echo"<p>tabla ticket creada con exito</p>";
+        } else {
+            echo"Ocurrio un problema con el ticket";
+        }
+    }
+    
+    public function tablaNodo()
+            {
+         $conexion = mysqli_connect($this->host, $this->user, $this->pass);
+        mysqli_select_db($conexion, 'taller_titulacion');
+        //Creo la tabla grupo e inserto los registros, con los campos de resumen_total
+        $grupo = "create table grupo as (select cliente,operador from resumen_total)";
+        // agrego el campo id_grupo a la tabla
+        $campo = "ALTER TABLE grupo ADD id_grupo int ;";
+        // borro los registros de la tabla para poder agregar la llave primaria al campo id_grupo
+        $borrar = "DELETE FROM `grupo` WHERE 1 ";
+        //agrego la llave primaria
+        $llave = "alter table grupo add primary key (id_grupo);";
+        //modifico el campo id_grupo para que sea autoincrementable
+        $index = "alter table grupo modify id_grupo int unsigned auto_increment;";
+        //vuelvo a insertar los campos ..
+        $insertar = "INSERT INTO grupo(cliente, operador)SELECT cliente, operador FROM resumen_total ";
+        // ***
+        // EJECUCION DE QUERYS
+        $grupo1 = mysqli_query($conexion, $grupo);
+        $campo1 = mysqli_query($conexion, $campo);
+        $borrar1 = mysqli_query($conexion, $borrar);
+        $llave1 = mysqli_query($conexion, $llave);
+        $index1 = mysqli_query($conexion, $index);
+        $insertar1 = mysqli_query($conexion, $insertar);
+        //****
+        if ($grupo1 || $campo1 || $borrar1 || $llave1 || $index1 || $insertar1) {
+            echo"tabla creada con exito";
+        } else {
+            echo"Ocurrio un problema";
+        }
+            }
 
     public function insertaArchivo2() {
         // ESTE NO SE USA !
