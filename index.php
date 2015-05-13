@@ -11,19 +11,21 @@ and open the template in the editor.
         <link rel="stylesheet" href="vista/css/bootstrap.css"/>
     </head>
     <body>        
-           <div class="container">
-               <div class="page-header">
-                   <h3>Taller de Titulacion.</h3>
-               </div>
-               <div class="jumbotron">
-                            <?php
-                            include ('controlador/mantenedor.php');
-                            $mantenedor = new mantenedor();
-                            $mantenedor->insertar_Archivo();
-                            $mantenedor->crearTablas();
-                            ?>
-               </div>
-           </div> 
+        <div class="container">
+            <div class="page-header">
+                <h3>Taller de Titulacion.</h3>
+            </div>
+            <div class="jumbotron">
+                <?php
+                include ('controlador/mantenedor.php');
+                $mantenedor = new mantenedor();
+                   $limpio = $mantenedor ->concatLineas();
+                   $mantenedor->insertar_Archivo($limpio);
+                //$mantenedor->insertar_Archivo();
+                //$mantenedor->crearTablas();
+                ?>
+            </div>
+        </div> 
 
     </body>
 </html>
