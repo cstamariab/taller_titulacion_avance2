@@ -253,7 +253,7 @@ class mantenedor {
             mysqli_select_db($conexion, 'taller_titulacion');
             
 //           if(preg_match("/^[a-z3-9]+$/", substr($nro_ticket,0,1)) == 1 ) {
-               if(preg_match("/([A-Z]+[0-9]+[0-9]+-+[0-9]+[0-9])/", $nro_ticket) == 1){
+               if(preg_match("/([A-Z]+[0-9]+[0-9]+-+[0-9]+[0-9])/", $nro_ticket) == 1 and $llave_event != null ){
     // string only contain the a to z , A to Z, 0 to 9
           
                 $inserta = "INSERT INTO resumen_total (nro_ticket,fecha_creacion,operador,cliente,nombre_operador,from_mail_operador,mail_destino,tipo_notificacion,titulo_subject,precheck"
