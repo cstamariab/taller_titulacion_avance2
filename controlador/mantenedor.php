@@ -138,12 +138,6 @@ class mantenedor {
             
             $limpio[$x] = $claves;         
            
-
-            // divide la frase mediante cualquier número de comas o caracteres de espacio,
-            // lo que incluye " ", \r, \t, \n y \f
-            $claves = preg_split("\t", $limpio[$x]);
-
-        print_r($claves);
         }
         
         return $limpio;
